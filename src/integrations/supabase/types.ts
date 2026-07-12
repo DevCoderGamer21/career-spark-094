@@ -38,6 +38,36 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_resumes: {
+        Row: {
+          created_at: string
+          data: Json
+          id: string
+          template: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json
+          id?: string
+          template?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          id?: string
+          template?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       jd_matches: {
         Row: {
           created_at: string
@@ -223,6 +253,72 @@ export type Database = {
         }
         Relationships: []
       }
+      shortlists: {
+        Row: {
+          ai_analysis: Json | null
+          candidate_id: string
+          created_at: string
+          id: string
+          jd_id: string
+          matched_skills: string[] | null
+          missing_skills: string[] | null
+          notes: string | null
+          rank: number | null
+          recruiter_id: string
+          resume_id: string
+          similarity: number | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          ai_analysis?: Json | null
+          candidate_id: string
+          created_at?: string
+          id?: string
+          jd_id: string
+          matched_skills?: string[] | null
+          missing_skills?: string[] | null
+          notes?: string | null
+          rank?: number | null
+          recruiter_id: string
+          resume_id: string
+          similarity?: number | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          ai_analysis?: Json | null
+          candidate_id?: string
+          created_at?: string
+          id?: string
+          jd_id?: string
+          matched_skills?: string[] | null
+          missing_skills?: string[] | null
+          notes?: string | null
+          rank?: number | null
+          recruiter_id?: string
+          resume_id?: string
+          similarity?: number | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shortlists_jd_id_fkey"
+            columns: ["jd_id"]
+            isOneToOne: false
+            referencedRelation: "job_descriptions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shortlists_resume_id_fkey"
+            columns: ["resume_id"]
+            isOneToOne: false
+            referencedRelation: "resumes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -249,6 +345,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      grant_self_role: {
+        Args: { _role: Database["public"]["Enums"]["app_role"] }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
