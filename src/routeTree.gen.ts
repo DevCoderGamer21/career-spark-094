@@ -24,6 +24,7 @@ import { Route as AuthenticatedAdvisorRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedResumesIndexRouteImport } from './routes/_authenticated/resumes.index'
 import { Route as AuthenticatedRecruiterIndexRouteImport } from './routes/_authenticated/recruiter/index'
 import { Route as AuthenticatedResumesIdRouteImport } from './routes/_authenticated/resumes.$id'
+import { Route as AuthenticatedRecruiterIdRouteImport } from './routes/_authenticated/recruiter/$id'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -101,6 +102,12 @@ const AuthenticatedResumesIdRoute = AuthenticatedResumesIdRouteImport.update({
   path: '/resumes/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRecruiterIdRoute =
+  AuthenticatedRecruiterIdRouteImport.update({
+    id: '/recruiter/$id',
+    path: '/recruiter/$id',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -114,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/jd-match': typeof AuthenticatedJdMatchRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
+  '/recruiter/$id': typeof AuthenticatedRecruiterIdRoute
   '/resumes/$id': typeof AuthenticatedResumesIdRoute
   '/recruiter/': typeof AuthenticatedRecruiterIndexRoute
   '/resumes/': typeof AuthenticatedResumesIndexRoute
@@ -130,6 +138,7 @@ export interface FileRoutesByTo {
   '/jd-match': typeof AuthenticatedJdMatchRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
+  '/recruiter/$id': typeof AuthenticatedRecruiterIdRoute
   '/resumes/$id': typeof AuthenticatedResumesIdRoute
   '/recruiter': typeof AuthenticatedRecruiterIndexRoute
   '/resumes': typeof AuthenticatedResumesIndexRoute
@@ -148,6 +157,7 @@ export interface FileRoutesById {
   '/_authenticated/jd-match': typeof AuthenticatedJdMatchRoute
   '/_authenticated/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
+  '/_authenticated/recruiter/$id': typeof AuthenticatedRecruiterIdRoute
   '/_authenticated/resumes/$id': typeof AuthenticatedResumesIdRoute
   '/_authenticated/recruiter/': typeof AuthenticatedRecruiterIndexRoute
   '/_authenticated/resumes/': typeof AuthenticatedResumesIndexRoute
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/jd-match'
     | '/upload'
     | '/api/chat'
+    | '/recruiter/$id'
     | '/resumes/$id'
     | '/recruiter/'
     | '/resumes/'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/jd-match'
     | '/upload'
     | '/api/chat'
+    | '/recruiter/$id'
     | '/resumes/$id'
     | '/recruiter'
     | '/resumes'
@@ -199,6 +211,7 @@ export interface FileRouteTypes {
     | '/_authenticated/jd-match'
     | '/_authenticated/upload'
     | '/api/chat'
+    | '/_authenticated/recruiter/$id'
     | '/_authenticated/resumes/$id'
     | '/_authenticated/recruiter/'
     | '/_authenticated/resumes/'
@@ -322,6 +335,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedResumesIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/recruiter/$id': {
+      id: '/_authenticated/recruiter/$id'
+      path: '/recruiter/$id'
+      fullPath: '/recruiter/$id'
+      preLoaderRoute: typeof AuthenticatedRecruiterIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -330,6 +350,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedJdMatchRoute: typeof AuthenticatedJdMatchRoute
   AuthenticatedUploadRoute: typeof AuthenticatedUploadRoute
+  AuthenticatedRecruiterIdRoute: typeof AuthenticatedRecruiterIdRoute
   AuthenticatedResumesIdRoute: typeof AuthenticatedResumesIdRoute
   AuthenticatedRecruiterIndexRoute: typeof AuthenticatedRecruiterIndexRoute
   AuthenticatedResumesIndexRoute: typeof AuthenticatedResumesIndexRoute
@@ -340,6 +361,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedJdMatchRoute: AuthenticatedJdMatchRoute,
   AuthenticatedUploadRoute: AuthenticatedUploadRoute,
+  AuthenticatedRecruiterIdRoute: AuthenticatedRecruiterIdRoute,
   AuthenticatedResumesIdRoute: AuthenticatedResumesIdRoute,
   AuthenticatedRecruiterIndexRoute: AuthenticatedRecruiterIndexRoute,
   AuthenticatedResumesIndexRoute: AuthenticatedResumesIndexRoute,
