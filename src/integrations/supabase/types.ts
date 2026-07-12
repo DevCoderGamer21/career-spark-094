@@ -14,16 +14,251 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      advisor_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      jd_matches: {
+        Row: {
+          created_at: string
+          id: string
+          jd_text: string
+          jd_title: string | null
+          matched_skills: string[] | null
+          missing_skills: string[] | null
+          recommendations: Json | null
+          resume_id: string
+          similarity: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          jd_text: string
+          jd_title?: string | null
+          matched_skills?: string[] | null
+          missing_skills?: string[] | null
+          recommendations?: Json | null
+          resume_id: string
+          similarity?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          jd_text?: string
+          jd_title?: string | null
+          matched_skills?: string[] | null
+          missing_skills?: string[] | null
+          recommendations?: Json | null
+          resume_id?: string
+          similarity?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "jd_matches_resume_id_fkey"
+            columns: ["resume_id"]
+            isOneToOne: false
+            referencedRelation: "resumes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_descriptions: {
+        Row: {
+          company: string | null
+          created_at: string
+          description: string
+          experience_min: number | null
+          id: string
+          is_active: boolean
+          location: string | null
+          recruiter_id: string
+          required_skills: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string
+          description: string
+          experience_min?: number | null
+          id?: string
+          is_active?: boolean
+          location?: string | null
+          recruiter_id: string
+          required_skills?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          company?: string | null
+          created_at?: string
+          description?: string
+          experience_min?: number | null
+          id?: string
+          is_active?: boolean
+          location?: string | null
+          recruiter_id?: string
+          required_skills?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          college: string | null
+          created_at: string
+          full_name: string | null
+          github_url: string | null
+          graduation_year: number | null
+          headline: string | null
+          id: string
+          linkedin_url: string | null
+          phone: string | null
+          portfolio_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          college?: string | null
+          created_at?: string
+          full_name?: string | null
+          github_url?: string | null
+          graduation_year?: number | null
+          headline?: string | null
+          id: string
+          linkedin_url?: string | null
+          phone?: string | null
+          portfolio_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          college?: string | null
+          created_at?: string
+          full_name?: string | null
+          github_url?: string | null
+          graduation_year?: number | null
+          headline?: string | null
+          id?: string
+          linkedin_url?: string | null
+          phone?: string | null
+          portfolio_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      resumes: {
+        Row: {
+          ats_breakdown: Json | null
+          ats_score: number | null
+          created_at: string
+          file_path: string
+          filename: string
+          id: string
+          improvement_tips: Json | null
+          mime_type: string | null
+          parsed: Json | null
+          skills: string[] | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ats_breakdown?: Json | null
+          ats_score?: number | null
+          created_at?: string
+          file_path: string
+          filename: string
+          id?: string
+          improvement_tips?: Json | null
+          mime_type?: string | null
+          parsed?: Json | null
+          skills?: string[] | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ats_breakdown?: Json | null
+          ats_score?: number | null
+          created_at?: string
+          file_path?: string
+          filename?: string
+          id?: string
+          improvement_tips?: Json | null
+          mime_type?: string | null
+          parsed?: Json | null
+          skills?: string[] | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "candidate" | "recruiter" | "placement_officer"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +385,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "candidate", "recruiter", "placement_officer"],
+    },
   },
 } as const
