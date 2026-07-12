@@ -184,7 +184,7 @@ export const matchJobDescription = createServerFn({ method: "POST" })
           gaps: result.gaps ?? [],
           recommendations: result.recommendations ?? [],
           summary: result.summary ?? "",
-        },
+        } as never,
       })
       .select()
       .single();
