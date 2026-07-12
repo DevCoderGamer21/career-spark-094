@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as FeaturesRouteImport } from './routes/features'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -17,9 +18,17 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedUploadRouteImport } from './routes/_authenticated/upload'
+import { Route as AuthenticatedJdMatchRouteImport } from './routes/_authenticated/jd-match'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedAdvisorRouteImport } from './routes/_authenticated/advisor'
 import { Route as AuthenticatedResumesIndexRouteImport } from './routes/_authenticated/resumes.index'
+import { Route as AuthenticatedResumesIdRouteImport } from './routes/_authenticated/resumes.$id'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
@@ -59,9 +68,19 @@ const AuthenticatedUploadRoute = AuthenticatedUploadRouteImport.update({
   path: '/upload',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedJdMatchRoute = AuthenticatedJdMatchRouteImport.update({
+  id: '/jd-match',
+  path: '/jd-match',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdvisorRoute = AuthenticatedAdvisorRouteImport.update({
+  id: '/advisor',
+  path: '/advisor',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedResumesIndexRoute =
@@ -70,6 +89,11 @@ const AuthenticatedResumesIndexRoute =
     path: '/resumes/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedResumesIdRoute = AuthenticatedResumesIdRouteImport.update({
+  id: '/resumes/$id',
+  path: '/resumes/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -77,9 +101,13 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/features': typeof FeaturesRoute
   '/pricing': typeof PricingRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/advisor': typeof AuthenticatedAdvisorRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/jd-match': typeof AuthenticatedJdMatchRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
+  '/resumes/$id': typeof AuthenticatedResumesIdRoute
   '/resumes/': typeof AuthenticatedResumesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -88,9 +116,13 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/features': typeof FeaturesRoute
   '/pricing': typeof PricingRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/advisor': typeof AuthenticatedAdvisorRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/jd-match': typeof AuthenticatedJdMatchRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
+  '/resumes/$id': typeof AuthenticatedResumesIdRoute
   '/resumes': typeof AuthenticatedResumesIndexRoute
 }
 export interface FileRoutesById {
@@ -101,9 +133,13 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/features': typeof FeaturesRoute
   '/pricing': typeof PricingRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_authenticated/advisor': typeof AuthenticatedAdvisorRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/jd-match': typeof AuthenticatedJdMatchRoute
   '/_authenticated/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
+  '/_authenticated/resumes/$id': typeof AuthenticatedResumesIdRoute
   '/_authenticated/resumes/': typeof AuthenticatedResumesIndexRoute
 }
 export interface FileRouteTypes {
@@ -114,9 +150,13 @@ export interface FileRouteTypes {
     | '/auth'
     | '/features'
     | '/pricing'
+    | '/sitemap.xml'
+    | '/advisor'
     | '/dashboard'
+    | '/jd-match'
     | '/upload'
     | '/api/chat'
+    | '/resumes/$id'
     | '/resumes/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -125,9 +165,13 @@ export interface FileRouteTypes {
     | '/auth'
     | '/features'
     | '/pricing'
+    | '/sitemap.xml'
+    | '/advisor'
     | '/dashboard'
+    | '/jd-match'
     | '/upload'
     | '/api/chat'
+    | '/resumes/$id'
     | '/resumes'
   id:
     | '__root__'
@@ -137,9 +181,13 @@ export interface FileRouteTypes {
     | '/auth'
     | '/features'
     | '/pricing'
+    | '/sitemap.xml'
+    | '/_authenticated/advisor'
     | '/_authenticated/dashboard'
+    | '/_authenticated/jd-match'
     | '/_authenticated/upload'
     | '/api/chat'
+    | '/_authenticated/resumes/$id'
     | '/_authenticated/resumes/'
   fileRoutesById: FileRoutesById
 }
@@ -150,11 +198,19 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   FeaturesRoute: typeof FeaturesRoute
   PricingRoute: typeof PricingRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -211,11 +267,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUploadRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/jd-match': {
+      id: '/_authenticated/jd-match'
+      path: '/jd-match'
+      fullPath: '/jd-match'
+      preLoaderRoute: typeof AuthenticatedJdMatchRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/advisor': {
+      id: '/_authenticated/advisor'
+      path: '/advisor'
+      fullPath: '/advisor'
+      preLoaderRoute: typeof AuthenticatedAdvisorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/resumes/': {
@@ -225,18 +295,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedResumesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/resumes/$id': {
+      id: '/_authenticated/resumes/$id'
+      path: '/resumes/$id'
+      fullPath: '/resumes/$id'
+      preLoaderRoute: typeof AuthenticatedResumesIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdvisorRoute: typeof AuthenticatedAdvisorRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedJdMatchRoute: typeof AuthenticatedJdMatchRoute
   AuthenticatedUploadRoute: typeof AuthenticatedUploadRoute
+  AuthenticatedResumesIdRoute: typeof AuthenticatedResumesIdRoute
   AuthenticatedResumesIndexRoute: typeof AuthenticatedResumesIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdvisorRoute: AuthenticatedAdvisorRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedJdMatchRoute: AuthenticatedJdMatchRoute,
   AuthenticatedUploadRoute: AuthenticatedUploadRoute,
+  AuthenticatedResumesIdRoute: AuthenticatedResumesIdRoute,
   AuthenticatedResumesIndexRoute: AuthenticatedResumesIndexRoute,
 }
 
@@ -250,6 +333,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   FeaturesRoute: FeaturesRoute,
   PricingRoute: PricingRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
