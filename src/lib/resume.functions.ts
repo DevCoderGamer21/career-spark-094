@@ -106,10 +106,10 @@ export const analyzeResume = createServerFn({ method: "POST" })
     const { error: updErr } = await supabase
       .from("resumes")
       .update({
-        parsed: result.parsed,
+        parsed: result.parsed as never,
         skills,
         ats_score: atsScore,
-        ats_breakdown: { ...result.ats_breakdown, reasoning: result.score_reasoning },
+        ats_breakdown: { ...result.ats_breakdown, reasoning: result.score_reasoning } as never,
         status: "analyzed",
       })
       .eq("id", data.resumeId);
