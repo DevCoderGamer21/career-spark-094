@@ -236,7 +236,7 @@ export const improveResume = createServerFn({ method: "POST" })
 
     await supabase
       .from("resumes")
-      .update({ improvement_tips: result })
+      .update({ improvement_tips: result as never })
       .eq("id", data.resumeId);
 
     return result;
