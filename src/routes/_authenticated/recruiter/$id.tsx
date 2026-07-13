@@ -114,14 +114,21 @@ function JobDetail() {
             </div>
           )}
         </div>
-        <Button
-          className="bg-primary-gradient"
-          onClick={() => rankMut.mutate()}
-          disabled={rankMut.isPending}
-        >
-          {rankMut.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-          Run AI ranking
-        </Button>
+        <div className="flex gap-2">
+          <Button asChild variant="outline">
+            <Link to="/recruiter/$id/compare" params={{ id }}>
+              <GitCompare className="mr-2 h-4 w-4" /> Compare & export
+            </Link>
+          </Button>
+          <Button
+            className="bg-primary-gradient"
+            onClick={() => rankMut.mutate()}
+            disabled={rankMut.isPending}
+          >
+            {rankMut.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+            Run AI ranking
+          </Button>
+        </div>
       </div>
 
       {!analysis && (
