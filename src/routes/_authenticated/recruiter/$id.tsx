@@ -15,6 +15,7 @@ import {
   StarOff,
   CheckCircle2,
   XCircle,
+  GitCompare,
 } from "lucide-react";
 import { toast } from "sonner";
 
