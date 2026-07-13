@@ -18,6 +18,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedUploadRouteImport } from './routes/_authenticated/upload'
+import { Route as AuthenticatedPlacementRouteImport } from './routes/_authenticated/placement'
 import { Route as AuthenticatedJdMatchRouteImport } from './routes/_authenticated/jd-match'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdvisorRouteImport } from './routes/_authenticated/advisor'
@@ -71,6 +72,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
 const AuthenticatedUploadRoute = AuthenticatedUploadRouteImport.update({
   id: '/upload',
   path: '/upload',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPlacementRoute = AuthenticatedPlacementRouteImport.update({
+  id: '/placement',
+  path: '/placement',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedJdMatchRoute = AuthenticatedJdMatchRouteImport.update({
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/advisor': typeof AuthenticatedAdvisorRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/jd-match': typeof AuthenticatedJdMatchRoute
+  '/placement': typeof AuthenticatedPlacementRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
   '/builder/$id': typeof AuthenticatedBuilderIdRoute
@@ -159,6 +166,7 @@ export interface FileRoutesByTo {
   '/advisor': typeof AuthenticatedAdvisorRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/jd-match': typeof AuthenticatedJdMatchRoute
+  '/placement': typeof AuthenticatedPlacementRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
   '/builder/$id': typeof AuthenticatedBuilderIdRoute
@@ -181,6 +189,7 @@ export interface FileRoutesById {
   '/_authenticated/advisor': typeof AuthenticatedAdvisorRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/jd-match': typeof AuthenticatedJdMatchRoute
+  '/_authenticated/placement': typeof AuthenticatedPlacementRoute
   '/_authenticated/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
   '/_authenticated/builder/$id': typeof AuthenticatedBuilderIdRoute
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
     | '/advisor'
     | '/dashboard'
     | '/jd-match'
+    | '/placement'
     | '/upload'
     | '/api/chat'
     | '/builder/$id'
@@ -223,6 +233,7 @@ export interface FileRouteTypes {
     | '/advisor'
     | '/dashboard'
     | '/jd-match'
+    | '/placement'
     | '/upload'
     | '/api/chat'
     | '/builder/$id'
@@ -244,6 +255,7 @@ export interface FileRouteTypes {
     | '/_authenticated/advisor'
     | '/_authenticated/dashboard'
     | '/_authenticated/jd-match'
+    | '/_authenticated/placement'
     | '/_authenticated/upload'
     | '/api/chat'
     | '/_authenticated/builder/$id'
@@ -329,6 +341,13 @@ declare module '@tanstack/react-router' {
       path: '/upload'
       fullPath: '/upload'
       preLoaderRoute: typeof AuthenticatedUploadRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/placement': {
+      id: '/_authenticated/placement'
+      path: '/placement'
+      fullPath: '/placement'
+      preLoaderRoute: typeof AuthenticatedPlacementRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/jd-match': {
@@ -422,6 +441,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdvisorRoute: typeof AuthenticatedAdvisorRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedJdMatchRoute: typeof AuthenticatedJdMatchRoute
+  AuthenticatedPlacementRoute: typeof AuthenticatedPlacementRoute
   AuthenticatedUploadRoute: typeof AuthenticatedUploadRoute
   AuthenticatedBuilderIdRoute: typeof AuthenticatedBuilderIdRoute
   AuthenticatedRecruiterIdRoute: typeof AuthenticatedRecruiterIdRouteWithChildren
@@ -435,6 +455,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdvisorRoute: AuthenticatedAdvisorRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedJdMatchRoute: AuthenticatedJdMatchRoute,
+  AuthenticatedPlacementRoute: AuthenticatedPlacementRoute,
   AuthenticatedUploadRoute: AuthenticatedUploadRoute,
   AuthenticatedBuilderIdRoute: AuthenticatedBuilderIdRoute,
   AuthenticatedRecruiterIdRoute: AuthenticatedRecruiterIdRouteWithChildren,
