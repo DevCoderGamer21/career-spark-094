@@ -81,14 +81,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "AI-powered resume analysis, ATS scoring, job matching, skill gap detection, and career guidance for candidates, recruiters, and colleges.",
       },
       { name: "author", content: "ResumeAI" },
-      { property: "og:title", content: "ResumeAI — AI Resume Intelligence Platform" },
+      { property: "og:title", content: "ResumeAI — AI Resume Intelligence & Career Platform" },
       {
         property: "og:description",
         content:
-          "Analyze resumes, optimize ATS scores, match jobs, and get personalized career guidance powered by AI.",
+          "AI-powered resume analysis, ATS scoring, job matching, skill gap detection, and career guidance for candidates, recruiters, and colleges.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "ResumeAI — AI Resume Intelligence & Career Platform" },
+      { name: "twitter:description", content: "AI-powered resume analysis, ATS scoring, job matching, skill gap detection, and career guidance for candidates, recruiters, and colleges." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/910deef5-bd52-4974-8c17-50509fcadd71/id-preview-4a96fec2--20d6c236-3720-4981-a98b-7ad1383ab33a.lovable.app-1783870527773.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/910deef5-bd52-4974-8c17-50509fcadd71/id-preview-4a96fec2--20d6c236-3720-4981-a98b-7ad1383ab33a.lovable.app-1783870527773.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
