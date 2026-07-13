@@ -18,15 +18,19 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedUploadRouteImport } from './routes/_authenticated/upload'
+import { Route as AuthenticatedPlacementRouteImport } from './routes/_authenticated/placement'
 import { Route as AuthenticatedJdMatchRouteImport } from './routes/_authenticated/jd-match'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdvisorRouteImport } from './routes/_authenticated/advisor'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedResumesIndexRouteImport } from './routes/_authenticated/resumes.index'
 import { Route as AuthenticatedRecruiterIndexRouteImport } from './routes/_authenticated/recruiter/index'
 import { Route as AuthenticatedBuilderIndexRouteImport } from './routes/_authenticated/builder/index'
 import { Route as AuthenticatedResumesIdRouteImport } from './routes/_authenticated/resumes.$id'
 import { Route as AuthenticatedRecruiterIdRouteImport } from './routes/_authenticated/recruiter/$id'
 import { Route as AuthenticatedBuilderIdRouteImport } from './routes/_authenticated/builder/$id'
+import { Route as AuthenticatedAdminModelsRouteImport } from './routes/_authenticated/admin.models'
+import { Route as AuthenticatedRecruiterIdCompareRouteImport } from './routes/_authenticated/recruiter/$id.compare'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -72,6 +76,11 @@ const AuthenticatedUploadRoute = AuthenticatedUploadRouteImport.update({
   path: '/upload',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPlacementRoute = AuthenticatedPlacementRouteImport.update({
+  id: '/placement',
+  path: '/placement',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedJdMatchRoute = AuthenticatedJdMatchRouteImport.update({
   id: '/jd-match',
   path: '/jd-match',
@@ -85,6 +94,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
 const AuthenticatedAdvisorRoute = AuthenticatedAdvisorRouteImport.update({
   id: '/advisor',
   path: '/advisor',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedResumesIndexRoute =
@@ -121,6 +135,18 @@ const AuthenticatedBuilderIdRoute = AuthenticatedBuilderIdRouteImport.update({
   path: '/builder/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminModelsRoute =
+  AuthenticatedAdminModelsRouteImport.update({
+    id: '/models',
+    path: '/models',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedRecruiterIdCompareRoute =
+  AuthenticatedRecruiterIdCompareRouteImport.update({
+    id: '/compare',
+    path: '/compare',
+    getParentRoute: () => AuthenticatedRecruiterIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -129,17 +155,21 @@ export interface FileRoutesByFullPath {
   '/features': typeof FeaturesRoute
   '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/advisor': typeof AuthenticatedAdvisorRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/jd-match': typeof AuthenticatedJdMatchRoute
+  '/placement': typeof AuthenticatedPlacementRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
+  '/admin/models': typeof AuthenticatedAdminModelsRoute
   '/builder/$id': typeof AuthenticatedBuilderIdRoute
-  '/recruiter/$id': typeof AuthenticatedRecruiterIdRoute
+  '/recruiter/$id': typeof AuthenticatedRecruiterIdRouteWithChildren
   '/resumes/$id': typeof AuthenticatedResumesIdRoute
   '/builder/': typeof AuthenticatedBuilderIndexRoute
   '/recruiter/': typeof AuthenticatedRecruiterIndexRoute
   '/resumes/': typeof AuthenticatedResumesIndexRoute
+  '/recruiter/$id/compare': typeof AuthenticatedRecruiterIdCompareRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -148,17 +178,21 @@ export interface FileRoutesByTo {
   '/features': typeof FeaturesRoute
   '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/advisor': typeof AuthenticatedAdvisorRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/jd-match': typeof AuthenticatedJdMatchRoute
+  '/placement': typeof AuthenticatedPlacementRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
+  '/admin/models': typeof AuthenticatedAdminModelsRoute
   '/builder/$id': typeof AuthenticatedBuilderIdRoute
-  '/recruiter/$id': typeof AuthenticatedRecruiterIdRoute
+  '/recruiter/$id': typeof AuthenticatedRecruiterIdRouteWithChildren
   '/resumes/$id': typeof AuthenticatedResumesIdRoute
   '/builder': typeof AuthenticatedBuilderIndexRoute
   '/recruiter': typeof AuthenticatedRecruiterIndexRoute
   '/resumes': typeof AuthenticatedResumesIndexRoute
+  '/recruiter/$id/compare': typeof AuthenticatedRecruiterIdCompareRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -169,17 +203,21 @@ export interface FileRoutesById {
   '/features': typeof FeaturesRoute
   '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/advisor': typeof AuthenticatedAdvisorRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/jd-match': typeof AuthenticatedJdMatchRoute
+  '/_authenticated/placement': typeof AuthenticatedPlacementRoute
   '/_authenticated/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
+  '/_authenticated/admin/models': typeof AuthenticatedAdminModelsRoute
   '/_authenticated/builder/$id': typeof AuthenticatedBuilderIdRoute
-  '/_authenticated/recruiter/$id': typeof AuthenticatedRecruiterIdRoute
+  '/_authenticated/recruiter/$id': typeof AuthenticatedRecruiterIdRouteWithChildren
   '/_authenticated/resumes/$id': typeof AuthenticatedResumesIdRoute
   '/_authenticated/builder/': typeof AuthenticatedBuilderIndexRoute
   '/_authenticated/recruiter/': typeof AuthenticatedRecruiterIndexRoute
   '/_authenticated/resumes/': typeof AuthenticatedResumesIndexRoute
+  '/_authenticated/recruiter/$id/compare': typeof AuthenticatedRecruiterIdCompareRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -190,17 +228,21 @@ export interface FileRouteTypes {
     | '/features'
     | '/pricing'
     | '/sitemap.xml'
+    | '/admin'
     | '/advisor'
     | '/dashboard'
     | '/jd-match'
+    | '/placement'
     | '/upload'
     | '/api/chat'
+    | '/admin/models'
     | '/builder/$id'
     | '/recruiter/$id'
     | '/resumes/$id'
     | '/builder/'
     | '/recruiter/'
     | '/resumes/'
+    | '/recruiter/$id/compare'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -209,17 +251,21 @@ export interface FileRouteTypes {
     | '/features'
     | '/pricing'
     | '/sitemap.xml'
+    | '/admin'
     | '/advisor'
     | '/dashboard'
     | '/jd-match'
+    | '/placement'
     | '/upload'
     | '/api/chat'
+    | '/admin/models'
     | '/builder/$id'
     | '/recruiter/$id'
     | '/resumes/$id'
     | '/builder'
     | '/recruiter'
     | '/resumes'
+    | '/recruiter/$id/compare'
   id:
     | '__root__'
     | '/'
@@ -229,17 +275,21 @@ export interface FileRouteTypes {
     | '/features'
     | '/pricing'
     | '/sitemap.xml'
+    | '/_authenticated/admin'
     | '/_authenticated/advisor'
     | '/_authenticated/dashboard'
     | '/_authenticated/jd-match'
+    | '/_authenticated/placement'
     | '/_authenticated/upload'
     | '/api/chat'
+    | '/_authenticated/admin/models'
     | '/_authenticated/builder/$id'
     | '/_authenticated/recruiter/$id'
     | '/_authenticated/resumes/$id'
     | '/_authenticated/builder/'
     | '/_authenticated/recruiter/'
     | '/_authenticated/resumes/'
+    | '/_authenticated/recruiter/$id/compare'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -318,6 +368,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUploadRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/placement': {
+      id: '/_authenticated/placement'
+      path: '/placement'
+      fullPath: '/placement'
+      preLoaderRoute: typeof AuthenticatedPlacementRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/jd-match': {
       id: '/_authenticated/jd-match'
       path: '/jd-match'
@@ -337,6 +394,13 @@ declare module '@tanstack/react-router' {
       path: '/advisor'
       fullPath: '/advisor'
       preLoaderRoute: typeof AuthenticatedAdvisorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/resumes/': {
@@ -381,16 +445,57 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBuilderIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/models': {
+      id: '/_authenticated/admin/models'
+      path: '/models'
+      fullPath: '/admin/models'
+      preLoaderRoute: typeof AuthenticatedAdminModelsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/recruiter/$id/compare': {
+      id: '/_authenticated/recruiter/$id/compare'
+      path: '/compare'
+      fullPath: '/recruiter/$id/compare'
+      preLoaderRoute: typeof AuthenticatedRecruiterIdCompareRouteImport
+      parentRoute: typeof AuthenticatedRecruiterIdRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminModelsRoute: typeof AuthenticatedAdminModelsRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminModelsRoute: AuthenticatedAdminModelsRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedRecruiterIdRouteChildren {
+  AuthenticatedRecruiterIdCompareRoute: typeof AuthenticatedRecruiterIdCompareRoute
+}
+
+const AuthenticatedRecruiterIdRouteChildren: AuthenticatedRecruiterIdRouteChildren =
+  {
+    AuthenticatedRecruiterIdCompareRoute: AuthenticatedRecruiterIdCompareRoute,
+  }
+
+const AuthenticatedRecruiterIdRouteWithChildren =
+  AuthenticatedRecruiterIdRoute._addFileChildren(
+    AuthenticatedRecruiterIdRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedAdvisorRoute: typeof AuthenticatedAdvisorRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedJdMatchRoute: typeof AuthenticatedJdMatchRoute
+  AuthenticatedPlacementRoute: typeof AuthenticatedPlacementRoute
   AuthenticatedUploadRoute: typeof AuthenticatedUploadRoute
   AuthenticatedBuilderIdRoute: typeof AuthenticatedBuilderIdRoute
-  AuthenticatedRecruiterIdRoute: typeof AuthenticatedRecruiterIdRoute
+  AuthenticatedRecruiterIdRoute: typeof AuthenticatedRecruiterIdRouteWithChildren
   AuthenticatedResumesIdRoute: typeof AuthenticatedResumesIdRoute
   AuthenticatedBuilderIndexRoute: typeof AuthenticatedBuilderIndexRoute
   AuthenticatedRecruiterIndexRoute: typeof AuthenticatedRecruiterIndexRoute
@@ -398,12 +503,14 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedAdvisorRoute: AuthenticatedAdvisorRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedJdMatchRoute: AuthenticatedJdMatchRoute,
+  AuthenticatedPlacementRoute: AuthenticatedPlacementRoute,
   AuthenticatedUploadRoute: AuthenticatedUploadRoute,
   AuthenticatedBuilderIdRoute: AuthenticatedBuilderIdRoute,
-  AuthenticatedRecruiterIdRoute: AuthenticatedRecruiterIdRoute,
+  AuthenticatedRecruiterIdRoute: AuthenticatedRecruiterIdRouteWithChildren,
   AuthenticatedResumesIdRoute: AuthenticatedResumesIdRoute,
   AuthenticatedBuilderIndexRoute: AuthenticatedBuilderIndexRoute,
   AuthenticatedRecruiterIndexRoute: AuthenticatedRecruiterIndexRoute,

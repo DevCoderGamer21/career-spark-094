@@ -38,6 +38,42 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_model_settings: {
+        Row: {
+          created_at: string
+          enabled: boolean
+          feature: string
+          id: string
+          model: string
+          notes: string | null
+          temperature: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          enabled?: boolean
+          feature: string
+          id?: string
+          model?: string
+          notes?: string | null
+          temperature?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          enabled?: boolean
+          feature?: string
+          id?: string
+          model?: string
+          notes?: string | null
+          temperature?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       builder_resumes: {
         Row: {
           created_at: string
@@ -345,6 +381,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_first_admin: { Args: never; Returns: undefined }
       grant_self_role: {
         Args: { _role: Database["public"]["Enums"]["app_role"] }
         Returns: undefined
