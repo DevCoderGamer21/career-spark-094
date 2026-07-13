@@ -117,13 +117,13 @@ function ComparePage() {
                   <div className="mt-4">
                     <div className="text-[11px] uppercase tracking-wider text-muted-foreground mb-1">Matched ({c.matched_skills.length})</div>
                     <div className="flex flex-wrap gap-1">
-                      {c.matched_skills.slice(0, 12).map((s) => (
+                      {c.matched_skills.slice(0, 12).map((s: string) => (
                         <Badge key={s} className="bg-success/15 text-success border-success/20 text-[10px]">{s}</Badge>
                       ))}
                     </div>
                     <div className="text-[11px] uppercase tracking-wider text-muted-foreground mt-3 mb-1">Missing ({c.missing_skills.length})</div>
                     <div className="flex flex-wrap gap-1">
-                      {c.missing_skills.slice(0, 12).map((s) => (
+                      {c.missing_skills.slice(0, 12).map((s: string) => (
                         <Badge key={s} variant="outline" className="text-[10px] border-destructive/30 text-destructive">{s}</Badge>
                       ))}
                     </div>
