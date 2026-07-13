@@ -29,6 +29,7 @@ import { Route as AuthenticatedBuilderIndexRouteImport } from './routes/_authent
 import { Route as AuthenticatedResumesIdRouteImport } from './routes/_authenticated/resumes.$id'
 import { Route as AuthenticatedRecruiterIdRouteImport } from './routes/_authenticated/recruiter/$id'
 import { Route as AuthenticatedBuilderIdRouteImport } from './routes/_authenticated/builder/$id'
+import { Route as AuthenticatedAdminModelsRouteImport } from './routes/_authenticated/admin.models'
 import { Route as AuthenticatedRecruiterIdCompareRouteImport } from './routes/_authenticated/recruiter/$id.compare'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -134,6 +135,12 @@ const AuthenticatedBuilderIdRoute = AuthenticatedBuilderIdRouteImport.update({
   path: '/builder/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminModelsRoute =
+  AuthenticatedAdminModelsRouteImport.update({
+    id: '/models',
+    path: '/models',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedRecruiterIdCompareRoute =
   AuthenticatedRecruiterIdCompareRouteImport.update({
     id: '/compare',
@@ -148,13 +155,14 @@ export interface FileRoutesByFullPath {
   '/features': typeof FeaturesRoute
   '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/advisor': typeof AuthenticatedAdvisorRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/jd-match': typeof AuthenticatedJdMatchRoute
   '/placement': typeof AuthenticatedPlacementRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
+  '/admin/models': typeof AuthenticatedAdminModelsRoute
   '/builder/$id': typeof AuthenticatedBuilderIdRoute
   '/recruiter/$id': typeof AuthenticatedRecruiterIdRouteWithChildren
   '/resumes/$id': typeof AuthenticatedResumesIdRoute
@@ -170,13 +178,14 @@ export interface FileRoutesByTo {
   '/features': typeof FeaturesRoute
   '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/advisor': typeof AuthenticatedAdvisorRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/jd-match': typeof AuthenticatedJdMatchRoute
   '/placement': typeof AuthenticatedPlacementRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
+  '/admin/models': typeof AuthenticatedAdminModelsRoute
   '/builder/$id': typeof AuthenticatedBuilderIdRoute
   '/recruiter/$id': typeof AuthenticatedRecruiterIdRouteWithChildren
   '/resumes/$id': typeof AuthenticatedResumesIdRoute
@@ -194,13 +203,14 @@ export interface FileRoutesById {
   '/features': typeof FeaturesRoute
   '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/advisor': typeof AuthenticatedAdvisorRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/jd-match': typeof AuthenticatedJdMatchRoute
   '/_authenticated/placement': typeof AuthenticatedPlacementRoute
   '/_authenticated/upload': typeof AuthenticatedUploadRoute
   '/api/chat': typeof ApiChatRoute
+  '/_authenticated/admin/models': typeof AuthenticatedAdminModelsRoute
   '/_authenticated/builder/$id': typeof AuthenticatedBuilderIdRoute
   '/_authenticated/recruiter/$id': typeof AuthenticatedRecruiterIdRouteWithChildren
   '/_authenticated/resumes/$id': typeof AuthenticatedResumesIdRoute
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
     | '/placement'
     | '/upload'
     | '/api/chat'
+    | '/admin/models'
     | '/builder/$id'
     | '/recruiter/$id'
     | '/resumes/$id'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '/placement'
     | '/upload'
     | '/api/chat'
+    | '/admin/models'
     | '/builder/$id'
     | '/recruiter/$id'
     | '/resumes/$id'
@@ -270,6 +282,7 @@ export interface FileRouteTypes {
     | '/_authenticated/placement'
     | '/_authenticated/upload'
     | '/api/chat'
+    | '/_authenticated/admin/models'
     | '/_authenticated/builder/$id'
     | '/_authenticated/recruiter/$id'
     | '/_authenticated/resumes/$id'
@@ -432,6 +445,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBuilderIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/models': {
+      id: '/_authenticated/admin/models'
+      path: '/models'
+      fullPath: '/admin/models'
+      preLoaderRoute: typeof AuthenticatedAdminModelsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/recruiter/$id/compare': {
       id: '/_authenticated/recruiter/$id/compare'
       path: '/compare'
@@ -441,6 +461,17 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminModelsRoute: typeof AuthenticatedAdminModelsRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminModelsRoute: AuthenticatedAdminModelsRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
 interface AuthenticatedRecruiterIdRouteChildren {
   AuthenticatedRecruiterIdCompareRoute: typeof AuthenticatedRecruiterIdCompareRoute
@@ -457,7 +488,7 @@ const AuthenticatedRecruiterIdRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedAdvisorRoute: typeof AuthenticatedAdvisorRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedJdMatchRoute: typeof AuthenticatedJdMatchRoute
@@ -472,7 +503,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedAdvisorRoute: AuthenticatedAdvisorRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedJdMatchRoute: AuthenticatedJdMatchRoute,
