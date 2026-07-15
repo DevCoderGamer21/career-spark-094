@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { LayoutDashboard, FileText, Upload, Target, MessageSquare, LogOut, Brain, User, Briefcase, PenLine, GraduationCap, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, FileText, Upload, Target, MessageSquare, LogOut, Brain, User, Briefcase, PenLine, GraduationCap, ShieldCheck, ScrollText } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import type { User as AuthUser } from "@supabase/supabase-js";
@@ -15,7 +15,10 @@ const candidateNav = [
 ] as const;
 
 const recruiterNav = [{ to: "/recruiter", label: "Recruiter", icon: Briefcase }] as const;
-const placementNav = [{ to: "/placement", label: "Placement", icon: GraduationCap }] as const;
+const placementNav = [
+  { to: "/placement", label: "Placement", icon: GraduationCap },
+  { to: "/audit", label: "Audit logs", icon: ScrollText },
+] as const;
 const adminNav = [{ to: "/admin", label: "Admin console", icon: ShieldCheck }] as const;
 
 export function AppSidebar({ user }: { user: AuthUser | null }) {

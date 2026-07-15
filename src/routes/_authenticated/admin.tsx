@@ -86,10 +86,16 @@ function AdminShell() {
           <div className="text-xs uppercase tracking-widest text-primary font-semibold">Admin</div>
           <h1 className="mt-1 text-3xl md:text-4xl font-display font-bold">System console</h1>
         </div>
-        <nav className="flex gap-2">
+        <nav className="flex flex-wrap gap-2">
           <Button asChild size="sm" variant={isRoot ? "default" : "outline"}><Link to="/admin">Overview</Link></Button>
           <Button asChild size="sm" variant={pathname.startsWith("/admin/models") ? "default" : "outline"}>
             <Link to="/admin/models"><Cpu className="mr-1.5 h-3.5 w-3.5" /> AI models</Link>
+          </Button>
+          <Button asChild size="sm" variant={pathname.startsWith("/admin/history") ? "default" : "outline"}>
+            <Link to="/admin/history"><Cpu className="mr-1.5 h-3.5 w-3.5" /> Test history</Link>
+          </Button>
+          <Button asChild size="sm" variant={pathname.startsWith("/admin/audit") ? "default" : "outline"}>
+            <Link to="/admin/audit"><ScrollText className="mr-1.5 h-3.5 w-3.5" /> Audit logs</Link>
           </Button>
         </nav>
       </div>

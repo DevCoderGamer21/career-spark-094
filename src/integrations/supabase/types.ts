@@ -74,6 +74,39 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_id: string | null
+          actor_role: string | null
+          created_at: string
+          id: string
+          metadata: Json
+          target_id: string | null
+          target_type: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          actor_role?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json
+          target_id?: string | null
+          target_type?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          actor_role?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json
+          target_id?: string | null
+          target_type?: string | null
+        }
+        Relationships: []
+      }
       builder_resumes: {
         Row: {
           created_at: string
@@ -190,6 +223,45 @@ export type Database = {
           required_skills?: string[] | null
           title?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      model_test_history: {
+        Row: {
+          admin_id: string
+          created_at: string
+          error_message: string | null
+          id: string
+          latency_ms: number | null
+          model: string
+          ok: boolean
+          output: string | null
+          prompt: string
+          status: number | null
+        }
+        Insert: {
+          admin_id: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          latency_ms?: number | null
+          model: string
+          ok?: boolean
+          output?: string | null
+          prompt: string
+          status?: number | null
+        }
+        Update: {
+          admin_id?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          latency_ms?: number | null
+          model?: string
+          ok?: boolean
+          output?: string | null
+          prompt?: string
+          status?: number | null
         }
         Relationships: []
       }

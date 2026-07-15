@@ -61,13 +61,18 @@ function ComparePage() {
             Select 2–4 candidates to view side-by-side ATS sub-scores and skill coverage.
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => exportCSV(data)}>
-            <FileDown className="mr-2 h-4 w-4" /> CSV
-          </Button>
-          <Button variant="outline" onClick={() => exportPDF(data)}>
-            <FileText className="mr-2 h-4 w-4" /> PDF
-          </Button>
+        <div className="flex flex-col items-end gap-1">
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => exportCSV(data, chosen.length ? chosen : data.candidates)}>
+              <FileDown className="mr-2 h-4 w-4" /> CSV {chosen.length ? `(${chosen.length})` : "(all)"}
+            </Button>
+            <Button variant="outline" onClick={() => exportPDF(data, chosen.length ? chosen : data.candidates)}>
+              <FileText className="mr-2 h-4 w-4" /> PDF {chosen.length ? `(${chosen.length})` : "(all)"}
+            </Button>
+          </div>
+          <div className="text-[11px] text-muted-foreground">
+            {chosen.length ? `Exports include ${chosen.length} selected candidate(s) with ATS explanations` : "Select candidates to export a filtered set"}
+          </div>
         </div>
       </div>
 
@@ -217,53 +222,98 @@ function SubScores({ rawId }: { breakdown: any; rawId: string }) {
   );
 }
 
-function exportCSV(data: Exp) {
-  const headers = ["Name","Headline","Email","Phone","College","Grad","ATS","Match","MatchedSkills","MissingSkills","Status","ShortlistedAt"];
-  const rows = data.candidates.map((c) => [
-    c.name, c.headline ?? "", c.email ?? "", c.phone ?? "", c.college ?? "", c.graduation_year ?? "",
-    c.ats_score ?? "", c.similarity, c.matched_skills.join("; "), c.missing_skills.join("; "), c.status, c.shortlisted_at,
+type Candidate = Exp["candidates"][number];
+
+function atsExplanation(c: Candidate): string {
+  const parts: string[] = [];
+  parts.push(`ATS score: ${c.ats_score ?? "—"}. JD similarity: ${c.similarity}%.`);
+  if (c.matched_skills.length) parts.push(`Strengths — matches ${c.matched_skills.length} required skill(s): ${c.matched_skills.slice(0, 10).join(", ")}.`);
+  if (c.missing_skills.length) parts.push(`Gaps — missing ${c.missing_skills.length} required skill(s): ${c.missing_skills.slice(0, 10).join(", ")}.`);
+  const total = c.matched_skills.length + c.missing_skills.length;
+  if (total > 0) {
+    const coverage = Math.round((c.matched_skills.length / total) * 100);
+    parts.push(`Skill coverage of the JD's required set: ${coverage}%.`);
+  }
+  if (c.headline) parts.push(`Profile: ${c.headline}.`);
+  return parts.join(" ");
+}
+
+function exportCSV(data: Exp, candidates: Candidate[]) {
+  const headers = [
+    "Name","Headline","Email","Phone","LinkedIn","GitHub","College","GraduationYear",
+    "ATS","MatchPercent","MatchedSkills","MissingSkills","Status","ShortlistedAt","ATSExplanation",
+  ];
+  const rows = candidates.map((c) => [
+    c.name, c.headline ?? "", c.email ?? "", c.phone ?? "", c.linkedin ?? "", c.github ?? "",
+    c.college ?? "", c.graduation_year ?? "",
+    c.ats_score ?? "", c.similarity,
+    c.matched_skills.join("; "), c.missing_skills.join("; "),
+    c.status, c.shortlisted_at, atsExplanation(c),
   ]);
   const csv = [headers, ...rows].map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
   const blob = new Blob([csv], { type: "text/csv" });
   triggerDownload(blob, `${slug(data.jd.title)}-shortlist.csv`);
-  toast.success("CSV exported");
+  toast.success(`CSV exported (${candidates.length})`);
 }
 
-function exportPDF(data: Exp) {
+function exportPDF(data: Exp, candidates: Candidate[]) {
   const doc = new jsPDF({ unit: "pt", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
   let y = 40;
+  const ensureRoom = (needed: number) => {
+    if (y + needed > pageH - 40) { doc.addPage(); y = 40; }
+  };
+
   doc.setFont("helvetica", "bold"); doc.setFontSize(18);
   doc.text(`Shortlist: ${data.jd.title}`, 40, y); y += 20;
   doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100);
-  doc.text([data.jd.company, data.jd.location].filter(Boolean).join(" · ") || "—", 40, y); y += 20;
+  doc.text([data.jd.company, data.jd.location].filter(Boolean).join(" · ") || "—", 40, y); y += 14;
+  doc.text(`${candidates.length} candidate(s) · Exported ${new Date().toLocaleString()}`, 40, y); y += 20;
   doc.setTextColor(20);
-  doc.text(`${data.candidates.length} candidate(s) · Exported ${new Date().toLocaleString()}`, 40, y); y += 24;
 
-  data.candidates.forEach((c, i) => {
-    if (y > 760) { doc.addPage(); y = 40; }
+  candidates.forEach((c, i) => {
+    ensureRoom(90);
+    doc.setDrawColor(220); doc.line(40, y, pageW - 40, y); y += 12;
     doc.setFont("helvetica", "bold"); doc.setFontSize(12);
     doc.text(`${i + 1}. ${c.name}`, 40, y);
     doc.setFont("helvetica", "normal"); doc.setFontSize(10);
-    doc.text(`Match ${c.similarity}%  ATS ${c.ats_score ?? "—"}`, pageW - 180, y);
+    doc.text(`Match ${c.similarity}%  ·  ATS ${c.ats_score ?? "—"}`, pageW - 180, y);
     y += 14;
+
     doc.setTextColor(90);
-    const meta = [c.headline, c.email, c.phone, c.college].filter(Boolean).join(" · ");
-    if (meta) { doc.text(doc.splitTextToSize(meta, pageW - 80), 40, y); y += 12; }
+    const meta = [c.headline, c.email, c.phone, c.linkedin, c.college, c.graduation_year].filter(Boolean).join(" · ");
+    if (meta) {
+      const lines = doc.splitTextToSize(meta, pageW - 80);
+      doc.text(lines, 40, y); y += lines.length * 12;
+    }
     doc.setTextColor(20);
+
     if (c.matched_skills.length) {
-      const lines = doc.splitTextToSize("Matched: " + c.matched_skills.join(", "), pageW - 80);
+      const lines = doc.splitTextToSize("Matched skills: " + c.matched_skills.join(", "), pageW - 80);
+      ensureRoom(lines.length * 12 + 4);
       doc.text(lines, 40, y); y += lines.length * 12;
     }
     if (c.missing_skills.length) {
-      const lines = doc.splitTextToSize("Missing: " + c.missing_skills.join(", "), pageW - 80);
+      const lines = doc.splitTextToSize("Missing skills: " + c.missing_skills.join(", "), pageW - 80);
+      ensureRoom(lines.length * 12 + 4);
       doc.text(lines, 40, y); y += lines.length * 12;
     }
-    y += 8;
+
+    // ATS explanation section
+    ensureRoom(30);
+    y += 4;
+    doc.setFont("helvetica", "bold"); doc.setFontSize(10);
+    doc.text("ATS explanation", 40, y); y += 12;
+    doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(60);
+    const expLines = doc.splitTextToSize(atsExplanation(c), pageW - 80);
+    ensureRoom(expLines.length * 11 + 4);
+    doc.text(expLines, 40, y); y += expLines.length * 11 + 8;
+    doc.setTextColor(20);
   });
 
   doc.save(`${slug(data.jd.title)}-shortlist.pdf`);
-  toast.success("PDF exported");
+  toast.success(`PDF exported (${candidates.length})`);
 }
 
 function slug(s: string) { return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
