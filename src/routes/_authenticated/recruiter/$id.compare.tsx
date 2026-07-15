@@ -61,13 +61,18 @@ function ComparePage() {
             Select 2–4 candidates to view side-by-side ATS sub-scores and skill coverage.
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => exportCSV(data)}>
-            <FileDown className="mr-2 h-4 w-4" /> CSV
-          </Button>
-          <Button variant="outline" onClick={() => exportPDF(data)}>
-            <FileText className="mr-2 h-4 w-4" /> PDF
-          </Button>
+        <div className="flex flex-col items-end gap-1">
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => exportCSV(data, chosen.length ? chosen : data.candidates)}>
+              <FileDown className="mr-2 h-4 w-4" /> CSV {chosen.length ? `(${chosen.length})` : "(all)"}
+            </Button>
+            <Button variant="outline" onClick={() => exportPDF(data, chosen.length ? chosen : data.candidates)}>
+              <FileText className="mr-2 h-4 w-4" /> PDF {chosen.length ? `(${chosen.length})` : "(all)"}
+            </Button>
+          </div>
+          <div className="text-[11px] text-muted-foreground">
+            {chosen.length ? `Exports include ${chosen.length} selected candidate(s) with ATS explanations` : "Select candidates to export a filtered set"}
+          </div>
         </div>
       </div>
 
