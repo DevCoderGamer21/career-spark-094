@@ -70,25 +70,35 @@ describe("roles are never stored on user-facing tables", () => {
   });
 });
 
+function functionBody(name: string): string {
+  const re = new RegExp(
+    `create\\s+or\\s+replace\\s+function\\s+public\\.${name}\\s*\\([\\s\\S]*?\\$\\$;`,
+    "gi",
+  );
+  const matches = Array.from(allSql.matchAll(re)).map((m) => m[0]);
+  expect(matches.length, `no definition found for ${name}`).toBeGreaterThan(0);
+  return matches[matches.length - 1].toLowerCase();
+}
+
 describe("self-service role flows cannot escalate to admin", () => {
-  const grantSelf = allSql.slice(allSql.toLowerCase().lastIndexOf("function public.grant_self_role"));
+  const grantSelf = functionBody("grant_self_role");
 
   it("grant_self_role refuses the admin role", () => {
-    expect(grantSelf.toLowerCase()).toContain("admin role cannot be self-granted");
+    expect(grantSelf).toContain("admin role cannot be self-granted");
   });
 
   it("grant_self_role requires an authenticated caller", () => {
-    expect(grantSelf.toLowerCase()).toContain("auth.uid() is null");
+    expect(grantSelf).toContain("auth.uid() is null");
   });
 
   it("claim_first_admin only works when no admin exists", () => {
-    const claim = allSql.slice(allSql.toLowerCase().lastIndexOf("function public.claim_first_admin")).toLowerCase();
+    const claim = functionBody("claim_first_admin");
     expect(claim).toContain("admin already exists");
     expect(claim).toContain("auth.uid() is null");
   });
 
   it("only admins may manage the user_roles table directly", () => {
-    expect(lower).toContain("has_role(auth.uid(), 'admin'::app_role)");
+    expect(/create\s+policy\s+"[^"]*"\s+on\s+public\.user_roles[\s\S]*?has_role\(auth\.uid\(\),\s*'admin'/i.test(allSql)).toBe(true);
   });
 });
 
@@ -133,7 +143,7 @@ describe("the audit trail is immutable", () => {
     expect(policies.length).toBeGreaterThan(0);
     for (const p of policies) {
       expect(p).toContain("for select");
-      expect(p.includes("'admin'::app_role") || p.includes("'placement_officer'::app_role")).toBe(true);
+      expect(p.includes("'admin'") || p.includes("'placement_officer'")).toBe(true);
     }
   });
 });

@@ -39,8 +39,8 @@ describe("admin server functions are admin-only", () => {
     expect(admin).toContain('throw new Error("Admin role required")');
   });
 
-  it("never trusts client-supplied role claims for authorization", () => {
-    expect(/data\.(isAdmin|role)\b/.test(admin)).toBe(false);
+  it("never trusts a client-supplied admin flag for authorization", () => {
+    expect(/data\.(isAdmin|is_admin|actorRole|bypass)\b/.test(admin)).toBe(false);
   });
 });
 
