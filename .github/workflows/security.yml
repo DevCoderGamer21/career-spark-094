@@ -26,7 +26,7 @@ jobs:
       - name: Database policy guard (RLS, GRANTs, role escalation, audit immutability)
         run: bun run security:sql
 
-      - name: Security test suite
+      - name: Security test suite (RLS, role flows, privilege escalation)
         run: bun run test:security
 
       - name: Lint
@@ -37,3 +37,4 @@ jobs:
 
       - name: Dependency audit (fails on high/critical advisories)
         run: bun audit --audit-level=high
+

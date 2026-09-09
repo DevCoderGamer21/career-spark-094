@@ -82,6 +82,9 @@ export type Database = {
           created_at: string
           id: string
           metadata: Json
+          prev_hash: string | null
+          record_hash: string | null
+          seq: number | null
           target_id: string | null
           target_type: string | null
         }
@@ -92,6 +95,9 @@ export type Database = {
           created_at?: string
           id?: string
           metadata?: Json
+          prev_hash?: string | null
+          record_hash?: string | null
+          seq?: number | null
           target_id?: string | null
           target_type?: string | null
         }
@@ -102,6 +108,9 @@ export type Database = {
           created_at?: string
           id?: string
           metadata?: Json
+          prev_hash?: string | null
+          record_hash?: string | null
+          seq?: number | null
           target_id?: string | null
           target_type?: string | null
         }
@@ -453,6 +462,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      audit_log_payload: {
+        Args: {
+          _action: string
+          _actor: string
+          _actor_role: string
+          _created_at: string
+          _metadata: Json
+          _prev_hash: string
+          _seq: number
+          _target_id: string
+          _target_type: string
+        }
+        Returns: string
+      }
       claim_first_admin: { Args: never; Returns: undefined }
       grant_self_role: {
         Args: { _role: Database["public"]["Enums"]["app_role"] }
@@ -464,6 +487,15 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      verify_audit_chain: {
+        Args: never
+        Returns: {
+          checked: number
+          first_bad_id: string
+          first_bad_seq: number
+          ok: boolean
+        }[]
       }
     }
     Enums: {
