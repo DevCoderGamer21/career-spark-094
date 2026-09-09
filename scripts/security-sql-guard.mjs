@@ -69,6 +69,14 @@ if (!/revoke\s+update,\s*delete,\s*truncate\s+on\s+public\.audit_logs\s+from\s+a
 if (!lower.includes("after insert on public.user_roles") || !lower.includes("after delete on public.user_roles")) {
   fail("privilege changes on user_roles are not audited by a database trigger");
 }
+if (!lower.includes("before insert on public.audit_logs") || !lower.includes("function public.audit_log_chain")) {
+  fail("audit_logs is missing its tamper-evident hash chain trigger");
+}
+if (!lower.includes("sha256(") || !lower.includes("prev_hash") || !lower.includes("record_hash")) {
+  fail("audit_logs records are not hash-chained");
+}
+if (!lower.includes("function public.verify_audit_chain")) fail("no admin-only audit chain verifier");
+
 
 // 6. No blanket grants.
 if (/grant\s+all\s+on\s+all\s+tables/i.test(sql)) fail("blanket GRANT ALL ON ALL TABLES detected");
