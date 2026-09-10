@@ -4,9 +4,19 @@ on:
   pull_request:
   push:
     branches: [main]
+  schedule:
+    # Nightly full scan of main at 02:30 UTC
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
 
 # Blocks a PR whenever a security invariant regresses: RLS/GRANT gaps,
 # role-escalation paths, mutable audit trail, or a vulnerable dependency.
+# Every step's output is captured, published as a downloadable artifact on
+# failure, and pushed to the in-app security scan history.
 jobs:
   security:
     runs-on: ubuntu-latest
@@ -23,18 +33,75 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Database policy guard (RLS, GRANTs, role escalation, audit immutability)
-        run: bun run security:sql
+      - name: Prepare report directory
+        run: |
+          mkdir -p security-report
+          echo "SCAN_STARTED_AT=$(date +%s%3N)" >> "$GITHUB_ENV"
 
-      - name: Security test suite (RLS, role flows, privilege escalation)
-        run: bun run test:security
+      - name: Database policy guard (RLS, GRANTs, role escalation, audit immutability)
+        run: |
+          set +e
+          bun run security:sql 2>&1 | tee security-report/db-policy-guard.log
+          echo "${PIPESTATUS[0]}" > security-report/db-policy-guard.status
+
+      - name: Security test suite (RLS, role flows, privilege escalation, audit integrity)
+        run: |
+          set +e
+          bun run test:security 2>&1 | tee security-report/security-tests.log
+          echo "${PIPESTATUS[0]}" > security-report/security-tests.status
 
       - name: Lint
-        run: bun run lint
+        run: |
+          set +e
+          bun run lint 2>&1 | tee security-report/lint.log
+          echo "${PIPESTATUS[0]}" > security-report/lint.status
 
       - name: Typecheck
-        run: bunx tsc --noEmit
+        run: |
+          set +e
+          bunx tsc --noEmit 2>&1 | tee security-report/typecheck.log
+          echo "${PIPESTATUS[0]}" > security-report/typecheck.status
 
       - name: Dependency audit (fails on high/critical advisories)
-        run: bun audit --audit-level=high
+        run: |
+          set +e
+          bun audit --audit-level=high 2>&1 | tee security-report/dependency-audit.log
+          echo "${PIPESTATUS[0]}" > security-report/dependency-audit.status
 
+      - name: Build report, record scan history, block on findings
+        id: report
+        env:
+          SCAN_TRIGGER: ${{ github.event_name == 'schedule' && 'nightly' || github.event_name }}
+          SCAN_INGEST_URL: ${{ secrets.SCAN_INGEST_URL }}
+          SECURITY_SCAN_INGEST_SECRET: ${{ secrets.SECURITY_SCAN_INGEST_SECRET }}
+        run: |
+          export SCAN_DURATION_MS=$(( $(date +%s%3N) - SCAN_STARTED_AT ))
+          node scripts/security-report.mjs
+
+      - name: Upload security scan logs (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-scan-logs-${{ github.run_id }}
+          path: security-report/
+          retention-days: 30
+
+      - name: Open an issue for a failing nightly scan
+        if: failure() && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let body = 'Nightly security scan failed. See the run for details.';
+            try { body = fs.readFileSync('security-report/report.md', 'utf8'); } catch {}
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const title = `Nightly security scan failed (${new Date().toISOString().slice(0,10)})`;
+            const existing = await github.rest.issues.listForRepo({
+              ...context.repo, state: 'open', labels: 'security-scan',
+            });
+            const bodyFull = `${body}\n\n[Full run and downloadable logs](${runUrl})`;
+            if (existing.data.length > 0) {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: existing.data[0].number, body: bodyFull });
+            } else {
+              await github.rest.issues.create({ ...context.repo, title, body: bodyFull, labels: ['security-scan'] });
+            }
