@@ -370,6 +370,63 @@ export type Database = {
         }
         Relationships: []
       }
+      security_scan_runs: {
+        Row: {
+          branch: string | null
+          commit_sha: string | null
+          created_at: string
+          critical_count: number
+          duration_ms: number | null
+          findings: Json
+          id: string
+          info_count: number
+          logs: string | null
+          new_findings: number
+          run_url: string | null
+          source: string
+          status: string
+          total_findings: number
+          trigger: string
+          warning_count: number
+        }
+        Insert: {
+          branch?: string | null
+          commit_sha?: string | null
+          created_at?: string
+          critical_count?: number
+          duration_ms?: number | null
+          findings?: Json
+          id?: string
+          info_count?: number
+          logs?: string | null
+          new_findings?: number
+          run_url?: string | null
+          source?: string
+          status?: string
+          total_findings?: number
+          trigger?: string
+          warning_count?: number
+        }
+        Update: {
+          branch?: string | null
+          commit_sha?: string | null
+          created_at?: string
+          critical_count?: number
+          duration_ms?: number | null
+          findings?: Json
+          id?: string
+          info_count?: number
+          logs?: string | null
+          new_findings?: number
+          run_url?: string | null
+          source?: string
+          status?: string
+          total_findings?: number
+          trigger?: string
+          warning_count?: number
+        }
+        Relationships: []
+      }
       shortlists: {
         Row: {
           ai_analysis: Json | null
