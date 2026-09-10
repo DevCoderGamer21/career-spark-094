@@ -33,6 +33,7 @@ import { Route as AuthenticatedBuilderIdRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAdminModelsRouteImport } from './routes/_authenticated/admin.models'
 import { Route as AuthenticatedAdminHistoryRouteImport } from './routes/_authenticated/admin.history'
 import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin.audit'
+import { Route as ApiPublicHooksSecurityScanRouteImport } from './routes/api/public/hooks/security-scan'
 import { Route as AuthenticatedRecruiterIdCompareRouteImport } from './routes/_authenticated/recruiter/$id.compare'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -160,6 +161,12 @@ const AuthenticatedAdminAuditRoute = AuthenticatedAdminAuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const ApiPublicHooksSecurityScanRoute =
+  ApiPublicHooksSecurityScanRouteImport.update({
+    id: '/api/public/hooks/security-scan',
+    path: '/api/public/hooks/security-scan',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedRecruiterIdCompareRoute =
   AuthenticatedRecruiterIdCompareRouteImport.update({
     id: '/compare',
@@ -192,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/recruiter/': typeof AuthenticatedRecruiterIndexRoute
   '/resumes/': typeof AuthenticatedResumesIndexRoute
   '/recruiter/$id/compare': typeof AuthenticatedRecruiterIdCompareRoute
+  '/api/public/hooks/security-scan': typeof ApiPublicHooksSecurityScanRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -218,6 +226,7 @@ export interface FileRoutesByTo {
   '/recruiter': typeof AuthenticatedRecruiterIndexRoute
   '/resumes': typeof AuthenticatedResumesIndexRoute
   '/recruiter/$id/compare': typeof AuthenticatedRecruiterIdCompareRoute
+  '/api/public/hooks/security-scan': typeof ApiPublicHooksSecurityScanRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -246,6 +255,7 @@ export interface FileRoutesById {
   '/_authenticated/recruiter/': typeof AuthenticatedRecruiterIndexRoute
   '/_authenticated/resumes/': typeof AuthenticatedResumesIndexRoute
   '/_authenticated/recruiter/$id/compare': typeof AuthenticatedRecruiterIdCompareRoute
+  '/api/public/hooks/security-scan': typeof ApiPublicHooksSecurityScanRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -274,6 +284,7 @@ export interface FileRouteTypes {
     | '/recruiter/'
     | '/resumes/'
     | '/recruiter/$id/compare'
+    | '/api/public/hooks/security-scan'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -300,6 +311,7 @@ export interface FileRouteTypes {
     | '/recruiter'
     | '/resumes'
     | '/recruiter/$id/compare'
+    | '/api/public/hooks/security-scan'
   id:
     | '__root__'
     | '/'
@@ -327,6 +339,7 @@ export interface FileRouteTypes {
     | '/_authenticated/recruiter/'
     | '/_authenticated/resumes/'
     | '/_authenticated/recruiter/$id/compare'
+    | '/api/public/hooks/security-scan'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -338,6 +351,7 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiPublicHooksSecurityScanRoute: typeof ApiPublicHooksSecurityScanRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -510,6 +524,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAuditRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/api/public/hooks/security-scan': {
+      id: '/api/public/hooks/security-scan'
+      path: '/api/public/hooks/security-scan'
+      fullPath: '/api/public/hooks/security-scan'
+      preLoaderRoute: typeof ApiPublicHooksSecurityScanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/recruiter/$id/compare': {
       id: '/_authenticated/recruiter/$id/compare'
       path: '/compare'
@@ -593,6 +614,7 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiPublicHooksSecurityScanRoute: ApiPublicHooksSecurityScanRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
