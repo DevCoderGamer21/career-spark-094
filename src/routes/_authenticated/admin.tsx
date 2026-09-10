@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, ShieldCheck, Users, FileText, Briefcase, Star, Cpu, ScrollText } from "lucide-react";
+import { Loader2, ShieldCheck, ShieldAlert, Users, FileText, Briefcase, Star, Cpu, ScrollText } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -96,6 +96,9 @@ function AdminShell() {
           </Button>
           <Button asChild size="sm" variant={pathname.startsWith("/admin/audit") ? "default" : "outline"}>
             <Link to="/admin/audit"><ScrollText className="mr-1.5 h-3.5 w-3.5" /> Audit logs</Link>
+          </Button>
+          <Button asChild size="sm" variant={pathname.startsWith("/admin/scans") ? "default" : "outline"}>
+            <Link to="/admin/scans"><ShieldAlert className="mr-1.5 h-3.5 w-3.5" /> Security scans</Link>
           </Button>
         </nav>
       </div>

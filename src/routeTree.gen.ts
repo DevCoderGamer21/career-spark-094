@@ -30,9 +30,11 @@ import { Route as AuthenticatedBuilderIndexRouteImport } from './routes/_authent
 import { Route as AuthenticatedResumesIdRouteImport } from './routes/_authenticated/resumes.$id'
 import { Route as AuthenticatedRecruiterIdRouteImport } from './routes/_authenticated/recruiter/$id'
 import { Route as AuthenticatedBuilderIdRouteImport } from './routes/_authenticated/builder/$id'
+import { Route as AuthenticatedAdminScansRouteImport } from './routes/_authenticated/admin.scans'
 import { Route as AuthenticatedAdminModelsRouteImport } from './routes/_authenticated/admin.models'
 import { Route as AuthenticatedAdminHistoryRouteImport } from './routes/_authenticated/admin.history'
 import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin.audit'
+import { Route as ApiPublicHooksSecurityScanRouteImport } from './routes/api/public/hooks/security-scan'
 import { Route as AuthenticatedRecruiterIdCompareRouteImport } from './routes/_authenticated/recruiter/$id.compare'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -143,6 +145,11 @@ const AuthenticatedBuilderIdRoute = AuthenticatedBuilderIdRouteImport.update({
   path: '/builder/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminScansRoute = AuthenticatedAdminScansRouteImport.update({
+  id: '/scans',
+  path: '/scans',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminModelsRoute =
   AuthenticatedAdminModelsRouteImport.update({
     id: '/models',
@@ -160,6 +167,12 @@ const AuthenticatedAdminAuditRoute = AuthenticatedAdminAuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const ApiPublicHooksSecurityScanRoute =
+  ApiPublicHooksSecurityScanRouteImport.update({
+    id: '/api/public/hooks/security-scan',
+    path: '/api/public/hooks/security-scan',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedRecruiterIdCompareRoute =
   AuthenticatedRecruiterIdCompareRouteImport.update({
     id: '/compare',
@@ -185,6 +198,7 @@ export interface FileRoutesByFullPath {
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/history': typeof AuthenticatedAdminHistoryRoute
   '/admin/models': typeof AuthenticatedAdminModelsRoute
+  '/admin/scans': typeof AuthenticatedAdminScansRoute
   '/builder/$id': typeof AuthenticatedBuilderIdRoute
   '/recruiter/$id': typeof AuthenticatedRecruiterIdRouteWithChildren
   '/resumes/$id': typeof AuthenticatedResumesIdRoute
@@ -192,6 +206,7 @@ export interface FileRoutesByFullPath {
   '/recruiter/': typeof AuthenticatedRecruiterIndexRoute
   '/resumes/': typeof AuthenticatedResumesIndexRoute
   '/recruiter/$id/compare': typeof AuthenticatedRecruiterIdCompareRoute
+  '/api/public/hooks/security-scan': typeof ApiPublicHooksSecurityScanRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -211,6 +226,7 @@ export interface FileRoutesByTo {
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/history': typeof AuthenticatedAdminHistoryRoute
   '/admin/models': typeof AuthenticatedAdminModelsRoute
+  '/admin/scans': typeof AuthenticatedAdminScansRoute
   '/builder/$id': typeof AuthenticatedBuilderIdRoute
   '/recruiter/$id': typeof AuthenticatedRecruiterIdRouteWithChildren
   '/resumes/$id': typeof AuthenticatedResumesIdRoute
@@ -218,6 +234,7 @@ export interface FileRoutesByTo {
   '/recruiter': typeof AuthenticatedRecruiterIndexRoute
   '/resumes': typeof AuthenticatedResumesIndexRoute
   '/recruiter/$id/compare': typeof AuthenticatedRecruiterIdCompareRoute
+  '/api/public/hooks/security-scan': typeof ApiPublicHooksSecurityScanRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -239,6 +256,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/_authenticated/admin/history': typeof AuthenticatedAdminHistoryRoute
   '/_authenticated/admin/models': typeof AuthenticatedAdminModelsRoute
+  '/_authenticated/admin/scans': typeof AuthenticatedAdminScansRoute
   '/_authenticated/builder/$id': typeof AuthenticatedBuilderIdRoute
   '/_authenticated/recruiter/$id': typeof AuthenticatedRecruiterIdRouteWithChildren
   '/_authenticated/resumes/$id': typeof AuthenticatedResumesIdRoute
@@ -246,6 +264,7 @@ export interface FileRoutesById {
   '/_authenticated/recruiter/': typeof AuthenticatedRecruiterIndexRoute
   '/_authenticated/resumes/': typeof AuthenticatedResumesIndexRoute
   '/_authenticated/recruiter/$id/compare': typeof AuthenticatedRecruiterIdCompareRoute
+  '/api/public/hooks/security-scan': typeof ApiPublicHooksSecurityScanRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -267,6 +286,7 @@ export interface FileRouteTypes {
     | '/admin/audit'
     | '/admin/history'
     | '/admin/models'
+    | '/admin/scans'
     | '/builder/$id'
     | '/recruiter/$id'
     | '/resumes/$id'
@@ -274,6 +294,7 @@ export interface FileRouteTypes {
     | '/recruiter/'
     | '/resumes/'
     | '/recruiter/$id/compare'
+    | '/api/public/hooks/security-scan'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -293,6 +314,7 @@ export interface FileRouteTypes {
     | '/admin/audit'
     | '/admin/history'
     | '/admin/models'
+    | '/admin/scans'
     | '/builder/$id'
     | '/recruiter/$id'
     | '/resumes/$id'
@@ -300,6 +322,7 @@ export interface FileRouteTypes {
     | '/recruiter'
     | '/resumes'
     | '/recruiter/$id/compare'
+    | '/api/public/hooks/security-scan'
   id:
     | '__root__'
     | '/'
@@ -320,6 +343,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/audit'
     | '/_authenticated/admin/history'
     | '/_authenticated/admin/models'
+    | '/_authenticated/admin/scans'
     | '/_authenticated/builder/$id'
     | '/_authenticated/recruiter/$id'
     | '/_authenticated/resumes/$id'
@@ -327,6 +351,7 @@ export interface FileRouteTypes {
     | '/_authenticated/recruiter/'
     | '/_authenticated/resumes/'
     | '/_authenticated/recruiter/$id/compare'
+    | '/api/public/hooks/security-scan'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -338,6 +363,7 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiPublicHooksSecurityScanRoute: typeof ApiPublicHooksSecurityScanRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -489,6 +515,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBuilderIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/scans': {
+      id: '/_authenticated/admin/scans'
+      path: '/scans'
+      fullPath: '/admin/scans'
+      preLoaderRoute: typeof AuthenticatedAdminScansRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/models': {
       id: '/_authenticated/admin/models'
       path: '/models'
@@ -510,6 +543,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminAuditRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/api/public/hooks/security-scan': {
+      id: '/api/public/hooks/security-scan'
+      path: '/api/public/hooks/security-scan'
+      fullPath: '/api/public/hooks/security-scan'
+      preLoaderRoute: typeof ApiPublicHooksSecurityScanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/recruiter/$id/compare': {
       id: '/_authenticated/recruiter/$id/compare'
       path: '/compare'
@@ -524,12 +564,14 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAuditRoute: typeof AuthenticatedAdminAuditRoute
   AuthenticatedAdminHistoryRoute: typeof AuthenticatedAdminHistoryRoute
   AuthenticatedAdminModelsRoute: typeof AuthenticatedAdminModelsRoute
+  AuthenticatedAdminScansRoute: typeof AuthenticatedAdminScansRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAuditRoute: AuthenticatedAdminAuditRoute,
   AuthenticatedAdminHistoryRoute: AuthenticatedAdminHistoryRoute,
   AuthenticatedAdminModelsRoute: AuthenticatedAdminModelsRoute,
+  AuthenticatedAdminScansRoute: AuthenticatedAdminScansRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =
@@ -593,6 +635,7 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiPublicHooksSecurityScanRoute: ApiPublicHooksSecurityScanRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
