@@ -32,6 +32,7 @@ import { Route as AuthenticatedRecruiterIdRouteImport } from './routes/_authenti
 import { Route as AuthenticatedBuilderIdRouteImport } from './routes/_authenticated/builder/$id'
 import { Route as AuthenticatedAdminScansRouteImport } from './routes/_authenticated/admin.scans'
 import { Route as AuthenticatedAdminModelsRouteImport } from './routes/_authenticated/admin.models'
+import { Route as AuthenticatedAdminIntegrationsRouteImport } from './routes/_authenticated/admin.integrations'
 import { Route as AuthenticatedAdminHistoryRouteImport } from './routes/_authenticated/admin.history'
 import { Route as AuthenticatedAdminAuditRouteImport } from './routes/_authenticated/admin.audit'
 import { Route as ApiPublicHooksSecurityScanRouteImport } from './routes/api/public/hooks/security-scan'
@@ -156,6 +157,12 @@ const AuthenticatedAdminModelsRoute =
     path: '/models',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminIntegrationsRoute =
+  AuthenticatedAdminIntegrationsRouteImport.update({
+    id: '/integrations',
+    path: '/integrations',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminHistoryRoute =
   AuthenticatedAdminHistoryRouteImport.update({
     id: '/history',
@@ -197,6 +204,7 @@ export interface FileRoutesByFullPath {
   '/api/chat': typeof ApiChatRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/history': typeof AuthenticatedAdminHistoryRoute
+  '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/admin/models': typeof AuthenticatedAdminModelsRoute
   '/admin/scans': typeof AuthenticatedAdminScansRoute
   '/builder/$id': typeof AuthenticatedBuilderIdRoute
@@ -225,6 +233,7 @@ export interface FileRoutesByTo {
   '/api/chat': typeof ApiChatRoute
   '/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/admin/history': typeof AuthenticatedAdminHistoryRoute
+  '/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/admin/models': typeof AuthenticatedAdminModelsRoute
   '/admin/scans': typeof AuthenticatedAdminScansRoute
   '/builder/$id': typeof AuthenticatedBuilderIdRoute
@@ -255,6 +264,7 @@ export interface FileRoutesById {
   '/api/chat': typeof ApiChatRoute
   '/_authenticated/admin/audit': typeof AuthenticatedAdminAuditRoute
   '/_authenticated/admin/history': typeof AuthenticatedAdminHistoryRoute
+  '/_authenticated/admin/integrations': typeof AuthenticatedAdminIntegrationsRoute
   '/_authenticated/admin/models': typeof AuthenticatedAdminModelsRoute
   '/_authenticated/admin/scans': typeof AuthenticatedAdminScansRoute
   '/_authenticated/builder/$id': typeof AuthenticatedBuilderIdRoute
@@ -285,6 +295,7 @@ export interface FileRouteTypes {
     | '/api/chat'
     | '/admin/audit'
     | '/admin/history'
+    | '/admin/integrations'
     | '/admin/models'
     | '/admin/scans'
     | '/builder/$id'
@@ -313,6 +324,7 @@ export interface FileRouteTypes {
     | '/api/chat'
     | '/admin/audit'
     | '/admin/history'
+    | '/admin/integrations'
     | '/admin/models'
     | '/admin/scans'
     | '/builder/$id'
@@ -342,6 +354,7 @@ export interface FileRouteTypes {
     | '/api/chat'
     | '/_authenticated/admin/audit'
     | '/_authenticated/admin/history'
+    | '/_authenticated/admin/integrations'
     | '/_authenticated/admin/models'
     | '/_authenticated/admin/scans'
     | '/_authenticated/builder/$id'
@@ -529,6 +542,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminModelsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/integrations': {
+      id: '/_authenticated/admin/integrations'
+      path: '/integrations'
+      fullPath: '/admin/integrations'
+      preLoaderRoute: typeof AuthenticatedAdminIntegrationsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/history': {
       id: '/_authenticated/admin/history'
       path: '/history'
@@ -563,6 +583,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminAuditRoute: typeof AuthenticatedAdminAuditRoute
   AuthenticatedAdminHistoryRoute: typeof AuthenticatedAdminHistoryRoute
+  AuthenticatedAdminIntegrationsRoute: typeof AuthenticatedAdminIntegrationsRoute
   AuthenticatedAdminModelsRoute: typeof AuthenticatedAdminModelsRoute
   AuthenticatedAdminScansRoute: typeof AuthenticatedAdminScansRoute
 }
@@ -570,6 +591,7 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminAuditRoute: AuthenticatedAdminAuditRoute,
   AuthenticatedAdminHistoryRoute: AuthenticatedAdminHistoryRoute,
+  AuthenticatedAdminIntegrationsRoute: AuthenticatedAdminIntegrationsRoute,
   AuthenticatedAdminModelsRoute: AuthenticatedAdminModelsRoute,
   AuthenticatedAdminScansRoute: AuthenticatedAdminScansRoute,
 }
