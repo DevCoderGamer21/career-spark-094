@@ -44,26 +44,28 @@ export const Route = createFileRoute("/api/public/hooks/security-scan")({
     handlers: {
       POST: async ({ request }) => {
         const raw = await request.text();
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { logIntegrationEvent, notifySecurityFindings } = await import("@/lib/security-notify.server");
+        const fail = async (status: number, message: string) => {
+          await logIntegrationEvent(supabaseAdmin, { kind: "ingest", ok: false, http_status: status, message }).catch(() => {});
+          return new Response(JSON.stringify({ error: message }), { status, headers: { "Content-Type": "application/json" } });
+        };
+        if (!process.env["SECURITY_SCAN_INGEST_SECRET"]) return fail(500, "Ingest secret not configured on the app");
+        if (!request.headers.get("x-scan-signature")) return fail(401, "Missing x-scan-signature header");
         if (!verify(raw, request.headers.get("x-scan-signature"))) {
-          return new Response(JSON.stringify({ error: "Invalid signature" }), {
-            status: 401,
-            headers: { "Content-Type": "application/json" },
-          });
+          return fail(401, "Signature mismatch — GitHub secret differs from the app secret");
         }
 
-        const parsed = payloadSchema.safeParse(JSON.parse(raw));
+        let json: unknown;
+        try { json = JSON.parse(raw); } catch { return fail(400, "Body is not valid JSON"); }
+        const parsed = payloadSchema.safeParse(json);
         if (!parsed.success) {
-          return new Response(JSON.stringify({ error: "Invalid payload" }), {
-            status: 400,
-            headers: { "Content-Type": "application/json" },
-          });
+          return fail(400, "Invalid payload: " + parsed.error.issues.slice(0, 3).map((i) => `${i.path.join(".")} ${i.message}`).join("; "));
         }
         const p = parsed.data;
 
         const counts = { critical: 0, warning: 0, info: 0 };
         for (const f of p.findings) counts[f.level]++;
-
-        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
         // "new" = fingerprints not seen in the previous run on the same branch
         const { data: prev } = await supabaseAdmin
@@ -98,11 +100,18 @@ export const Route = createFileRoute("/api/public/hooks/security-scan")({
           .select("id")
           .single();
 
-        if (error) {
-          return new Response(JSON.stringify({ error: "Store failed" }), {
-            status: 500,
-            headers: { "Content-Type": "application/json" },
-          });
+        if (error) return fail(500, "Store failed: " + error.message);
+
+        await logIntegrationEvent(supabaseAdmin, {
+          kind: "ingest", ok: true, http_status: 200, run_id: data.id,
+          message: `Stored ${p.trigger} run (${p.findings.length} findings)`,
+        });
+
+        if (p.trigger === "nightly" && p.findings.length > 0) {
+          await notifySecurityFindings(supabaseAdmin, {
+            id: data.id, branch: p.branch, run_url: p.run_url, total_findings: p.findings.length,
+            critical_count: counts.critical, warning_count: counts.warning, findings: p.findings,
+          }).catch((e) => logIntegrationEvent(supabaseAdmin, { kind: "notify", ok: false, message: String(e), run_id: data.id }));
         }
 
         return new Response(JSON.stringify({ ok: true, id: data.id, new_findings: newFindings }), {
