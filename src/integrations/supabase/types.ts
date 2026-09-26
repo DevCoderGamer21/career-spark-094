@@ -146,6 +146,36 @@ export type Database = {
         }
         Relationships: []
       }
+      integration_events: {
+        Row: {
+          created_at: string
+          http_status: number | null
+          id: string
+          kind: string
+          message: string | null
+          ok: boolean
+          run_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          http_status?: number | null
+          id?: string
+          kind: string
+          message?: string | null
+          ok: boolean
+          run_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          http_status?: number | null
+          id?: string
+          kind?: string
+          message?: string | null
+          ok?: boolean
+          run_id?: string | null
+        }
+        Relationships: []
+      }
       jd_matches: {
         Row: {
           created_at: string
@@ -367,6 +397,36 @@ export type Database = {
           status?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      security_notification_settings: {
+        Row: {
+          email_enabled: boolean
+          email_recipients: string[]
+          id: boolean
+          slack_channel: string | null
+          slack_enabled: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          email_enabled?: boolean
+          email_recipients?: string[]
+          id?: boolean
+          slack_channel?: string | null
+          slack_enabled?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          email_enabled?: boolean
+          email_recipients?: string[]
+          id?: boolean
+          slack_channel?: string | null
+          slack_enabled?: boolean
+          updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
