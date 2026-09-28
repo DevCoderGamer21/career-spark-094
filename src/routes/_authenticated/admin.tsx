@@ -103,6 +103,9 @@ function AdminShell() {
           <Button asChild size="sm" variant={pathname.startsWith("/admin/integrations") ? "default" : "outline"}>
             <Link to="/admin/integrations"><Cpu className="mr-1.5 h-3.5 w-3.5" /> Integrations</Link>
           </Button>
+          <Button asChild size="sm" variant={pathname.startsWith("/admin/alerts") ? "default" : "outline"}>
+            <Link to="/admin/alerts"><ShieldCheck className="mr-1.5 h-3.5 w-3.5" /> Alert deliveries</Link>
+          </Button>
         </nav>
       </div>
       {isRoot ? <AdminOverview /> : <Outlet />}

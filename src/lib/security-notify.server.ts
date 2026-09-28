@@ -3,7 +3,10 @@ type Admin = any;
 
 export async function logIntegrationEvent(
   admin: Admin,
-  e: { kind: string; ok: boolean; http_status?: number | null; message?: string | null; run_id?: string | null },
+  e: {
+    kind: string; ok: boolean; http_status?: number | null; message?: string | null; run_id?: string | null;
+    target?: string | null; body?: string | null; attempt?: number; retry_of?: string | null;
+  },
 ) {
   await admin.from("integration_events").insert({
     kind: e.kind,
@@ -11,6 +14,10 @@ export async function logIntegrationEvent(
     http_status: e.http_status ?? null,
     message: e.message ? e.message.slice(0, 1000) : null,
     run_id: e.run_id ?? null,
+    target: e.target ?? null,
+    body: e.body ? e.body.slice(0, 4000) : null,
+    attempt: e.attempt ?? 1,
+    retry_of: e.retry_of ?? null,
   });
 }
 
@@ -68,12 +75,12 @@ export async function notifySecurityFindings(admin: Admin, run: AlertRun, opts: 
   const results: { kind: string; ok: boolean; message: string }[] = [];
   if (s.slack_enabled && s.slack_channel) {
     const r = await sendSlack(s.slack_channel, text);
-    await logIntegrationEvent(admin, { kind: "slack", ok: r.ok, http_status: r.status, message: r.message, run_id: run.id });
+    await logIntegrationEvent(admin, { kind: "slack", ok: r.ok, http_status: r.status, message: r.message, run_id: run.id, target: s.slack_channel, body: text });
     results.push({ kind: "slack", ok: r.ok, message: r.message });
   }
   if (s.email_enabled && s.email_recipients?.length) {
     const r = await sendEmail(s.email_recipients, "Security scan findings", text);
-    await logIntegrationEvent(admin, { kind: "email", ok: r.ok, http_status: r.status, message: r.message, run_id: run.id });
+    await logIntegrationEvent(admin, { kind: "email", ok: r.ok, http_status: r.status, message: r.message, run_id: run.id, target: s.email_recipients.join(", "), body: text });
     results.push({ kind: "email", ok: r.ok, message: r.message });
   }
   return results;
