@@ -148,33 +148,53 @@ export type Database = {
       }
       integration_events: {
         Row: {
+          attempt: number
+          body: string | null
           created_at: string
           http_status: number | null
           id: string
           kind: string
           message: string | null
           ok: boolean
+          retry_of: string | null
           run_id: string | null
+          target: string | null
         }
         Insert: {
+          attempt?: number
+          body?: string | null
           created_at?: string
           http_status?: number | null
           id?: string
           kind: string
           message?: string | null
           ok: boolean
+          retry_of?: string | null
           run_id?: string | null
+          target?: string | null
         }
         Update: {
+          attempt?: number
+          body?: string | null
           created_at?: string
           http_status?: number | null
           id?: string
           kind?: string
           message?: string | null
           ok?: boolean
+          retry_of?: string | null
           run_id?: string | null
+          target?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "integration_events_retry_of_fkey"
+            columns: ["retry_of"]
+            isOneToOne: false
+            referencedRelation: "integration_events"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       jd_matches: {
         Row: {
